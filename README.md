@@ -1,169 +1,199 @@
-# Wedding Stage privacy policy
-Wedding stage is npersonalized match-making service that allow users to directly search for and find matches based on their desired partner characteristics without a match-maker.
+# GameHive
+#### Video Demo:  <[URL HERE (Click me)](https://www.youtube.com/watch?v=2EdBd5nvfL4)>
+#### Description: Game searching web app
+#### This repository was submitted as the final project for CS50X 2024 online course offered by Harvard University. It’s a web application built with Flask framework
 
-## PRIVACY POLICY
+> [!NOTE]
+> I'm Methuka Pasandul, im from Sri Lanka and 18yrs old. my final project is basically a game searching webapp. The specialty of this webapp is user can easily find and search for games by using filters such as categories, sorting and more. you can find over 400+ games in here, since the Api only returning around 400 games. so my sincere apology if u won't find your favorite game here, and I'm looking forward to publishing and implement some advanced user-friendly features in future.
 
-Last updated December 03, 2024
+## Introduction
+This document details the development and functionality of a web application designed for discovering and managing free-to-play games. Leveraging the FreeToGame API, this platform provides users with a comprehensive catalog of games, complete with detailed information and categorization. The application prioritizes user engagement and personalization through several key features:
 
-This Privacy Notice for Wedding Stage ("we," "us," or "our"), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services ("Services"), including when you:
-Download and use our mobile application (Wedding Stage), or any other application of ours that links to this Privacy Notice
-Use Wedding Stage. Personalized match-making service
-Engage with us in other related ways, including any sales, marketing, or events
-Questions or concerns? Reading this Privacy Notice will help you understand your privacy rights and choices. We are responsible for making decisions about how your personal information is processed. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please contact us at productmanager@weddingstage.lk.
+- **User Authentication and Management:** Users can create accounts, log in, and manage their profiles, including the option to delete their accounts.
 
+- **Game Discovery and Exploration:** The core functionality revolves around searching and browsing games. Users can refine their searches using various categories provided by the FreeToGame API, allowing for targeted discovery based on genre, platform, and other criteria. Each game listing provides detailed information, enabling users to make informed decisions.
 
-### SUMMARY OF KEY POINTS
+- **Personalized Game Library:** A key feature of the application is the ability for users to add their favorite game thier library. By "liking" games, users can save them to their personal collections for easy access and future reference.
 
-This summary provides key points from our Privacy Notice, but you can find out more details about any of these topics by clicking the link following each key point or by using our table of contents below to find the section you are looking for.
+- **Community Engagement (Blog-like Functionality):** The platform incorporates elements of a blog, encouraging user read about thier favorite games. This feature allows for potential future expansion into user reviews, discussions, and other forms of community engagement.
 
-What personal information do we process? When you visit, use, or navigate our Services, we may process personal information depending on how you interact with us and the Services, the choices you make, and the products and features you use. Learn more about personal information you disclose to us.
+## Core Features
 
-Do we process any sensitive personal information? Some of the information may be considered "special" or "sensitive" in certain jurisdictions, for example your racial or ethnic origins, sexual orientation, and religious beliefs. We may process sensitive personal information when necessary with your consent or as otherwise permitted by applicable law. Learn more about sensitive information we process.
 
-Do we collect any information from third parties? We do not collect any information from third parties.
+### Register
+GameHive prioritizes user security by implementing a robust registration process:
 
-How do we process your information? We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent. We process your information only when we have a valid legal reason to do so. Learn more about how we process your information.
+HTTP Methods: The register route handles both GET and POST requests. GET requests display the registration form, while POST requests submit user-provided data for account creation.
 
-In what situations and with which parties do we share personal information? We may share information in specific situations and with specific third parties. Learn more about when and with whom we share your personal information.
+Form Validation: Upon receiving a POST request:
 
-How do we keep your information safe? We have adequate organizational and technical processes and procedures in place to protect your personal information. However, no electronic transmission over the internet or information storage technology can be guaranteed to be 100% secure, so we cannot promise or guarantee that hackers, cybercriminals, or other unauthorized third parties will not be able to defeat our security and improperly collect, access, steal, or modify your information. Learn more about how we keep your information safe.
+- **Missing Username:** If the username field is blank, a user-friendly flash message is displayed using Flask's flash function, indicating that a username is required.
 
-What are your rights? Depending on where you are located geographically, the applicable privacy law may mean you have certain rights regarding your personal information. Learn more about your privacy rights.
+- **Missing Password:** Similarly, missing password or password confirmation triggers error messages.
 
-How do you exercise your rights? The easiest way to exercise your rights is by visiting __________, or by contacting us. We will consider and act upon any request in accordance with applicable data protection laws.
+- **Password Matching:** Submitted passwords must match exactly. A mismatch prompts an error message.
 
-Want to learn more about what we do with any information we collect? Review the Privacy Notice in full.
+- **Password Strength:** The password is validated using regular expressions to ensure it contains:
+  - Special characters ([!@#$%^&*()])
+  - Digits ([0-9])
 
+- **Username Restriction:** Usernames are restricted to letters only (no special characters) using regular expressions.
+Excessive Username Length: A maximum character limit for usernames is enforced to prevent potential database issues.
+Secure Password Hashing: If all validation checks pass, the user's password is securely hashed using Flask-WTF's generate_password_hash function. This one-way hashing process prevents storing passwords in plain text, enhancing security.
 
-TABLE OF CONTENTS
 
-1. WHAT INFORMATION DO WE COLLECT?
-2. HOW DO WE PROCESS YOUR INFORMATION?
-3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?
-4. HOW LONG DO WE KEEP YOUR INFORMATION?
-5. HOW DO WE KEEP YOUR INFORMATION SAFE?
-6. DO WE COLLECT INFORMATION FROM MINORS?
-7. WHAT ARE YOUR PRIVACY RIGHTS?
-8. CONTROLS FOR DO-NOT-TRACK FEATURES
-9. DO WE MAKE UPDATES TO THIS NOTICE?
-10. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?
-11. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?
+### LogIn
+This part describes the secure user login functionality implemented in the GameHive:
 
+HTTP Methods and Session Management: The /login route handles both GET and POST requests. A GET request renders the login form. Upon a POST request (form submission), the existing user session is cleared using session.clear(). This ensures that any previous user's session data is removed before a new login attempt.
 
-### 1. WHAT INFORMATION DO WE COLLECT?
+- **Input Validation:** The login process starts with input validation:
 
-Personal information you disclose to us
+- **Missing Username:** If the username field is empty, a flash message "Username is required." is displayed, and the login form is re-rendered.
+- **Missing Password:** Similarly, if the password field is empty, a flash message "Password is required." is shown, and the login form is re-rendered. This prevents empty submissions and provides immediate feedback to the user.
+- **Database Query and Authentication:**
 
-In Short: We collect personal information that you provide to us.
+  - **Database Lookup:** A database query is executed using a parameterized query (SELECT * FROM users WHERE username = ?) to retrieve the user's information based on the provided username. This parameterized query is crucial for preventing SQL injection vulnerabilities.
+  - **Credential Verification:** The code checks two conditions:
+    - len(rows) != 1: Ensures that exactly one user with the given username exists in the database. If no user or multiple users are found (which should not happen with a properly designed database), the login fails.
+    - not check_password_hash(rows[0]["hash"], request.form.get("password")): Uses Flask-WTF's check_password_hash function to securely compare the provided password with the stored hash from the database. This is the correct and secure way to verify passwords. Never compare passwords in plain text.
+- **Session Initialization and Redirection:** If both the username exists and the password matches its hash:
 
-We collect personal information that you voluntarily provide to us when you register on the Services, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us.
+- **Session Setup:** The user's id from the database is stored in the session using session["user_id"] = rows[0]["id"]. This establishes a logged-in session for the user.
+Success Message and Redirection: A success flash message "Log in successful!" is displayed, and the user is redirected to the home page (/).
 
-Personal Information Provided by You. The personal information that we collect depends on the context of your interactions with us and the Services, the choices you make, and the products and features you use. The personal information we collect may include the following:
-names
-phone numbers
-email addresses
-job titles
-passwords
-contact preferences
-contact or authentication data
-partner preferences
-Sensitive Information. When necessary, with your consent or as otherwise permitted by applicable law, we process the following categories of sensitive information:
-information revealing race or ethnic origin
-Payment Data. We may collect data necessary to process your payment if you choose to make purchases, such as your payment instrument number, and the security code associated with your payment instrument. All payment data is handled and stored by __________. You may find their privacy notice link(s) here: __________.
+- **GET Request Handling:** If the user accesses the /login route via a GET request (e.g., clicking a link), the login form is rendered.
 
-Application Data. If you use our application(s), we also may collect the following information if you choose to provide us with access or permission:
-Push Notifications. We may request to send you push notifications regarding your account or certain features of the application(s). If you wish to opt out from receiving these types of communications, you may turn them off in your device's settings.
-This information is primarily needed to maintain the security and operation of our application(s), for troubleshooting, and for our internal analytics and reporting purposes.
 
-All personal information that you provide to us must be true, complete, and accurate, and you must notify us of any changes to such personal information.
+### Game Search and Detail View
+This part showcases the core functionality of the application: searching for and displaying free-to-play games. Here's a breakdown:
 
+Route Configuration:
+The index route is defined with two URL patterns:
+- /: Handles the root path without a specific game ID, displaying a game listing page.
+- /\<int:game_id>: Handles URLs with an integer game ID, allowing users to view details of a specific game.
+The login_required decorator ensures that only logged-in users can access this page.
+User Context and Search Parameters:
 
-### 2. HOW DO WE PROCESS YOUR INFORMATION?
+The user's ID is retrieved from the session using session["user_id"].
+Building the API Request:
 
-In Short: We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent.
+The code retrieves search filters from the query string using request.args.get():
+- query: Game name (optional)
+- platform: Platform (optional)
+- category: Category (optional)
+- sort: Sort criteria (optional)
+- page: Page number (defaults to 1)
+  
+An API request URL is constructed based on the FreeToGame API URL and the extracted parameters (API_URL) using a dictionary (params).
+The request URL is dynamically built based on the presence of filters:
+- If platform is provided, it's added to the params dictionary.
+- Similar logic applies for category and sort.
 
-We process your personal information for a variety of reasons, depending on how you interact with our Services, including:
-To facilitate account creation and authentication and otherwise manage user accounts. We may process your information so you can create and log in to your account, as well as keep your account in working order.
+Fetching and Filtering Games:
+- The application makes a GET request to the FreeToGame API using the constructed URL with requests.get().
+- A successful response (status code 200) indicates valid data.
+- The response JSON is parsed and stored in the games variable.
+- If a search query (query) exists, the games are filtered to include only those with matching titles (case-insensitive).
+- If the response is unsuccessful, the games variable remains an empty list.
 
-To enable user-to-user communications. We may process your information if you choose to use any of our offerings that allow for communication with another user.
+Pagination:
+- A fixed number of games are displayed per page (games_per_page).
+- The total number of pages is calculated using integer division and rounding up to accommodate all games.
+- Pagination logic is implemented:
+  - start index defines the first game to show for the current page.
+  - end index defines the last game (exclusive) to show for the current page.
+  - paginated_games list contains the subset of games for the current page.
 
+Handling Game Details:
+If a specific game ID (game_id) is present in the URL:
+- Another GET request is made to the FreeToGame API, but with the specific game ID appended to the URL.
+- A successful response populates the game_details variable with the detailed information for that game.
+- The detailed.html template is rendered, displaying the specific game details.
+If the game details request fails, an error message is returned.
 
+Rendering Results:
+For the root path (/), the index.html template is rendered:
+- games: List of paginated games for the current page.
+- current_page: Current page number.
+- total_pages: Total number of pages.
+- Search filters (query, platform, category, sort) are passed to retain the filtering state across page navigation.
 
-To protect our Services. We may process your information as part of our efforts to keep our Services safe and secure, including fraud monitoring and prevention.
 
-### 3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?
+### Personalized Game Library
+This part showcases the user's library feature and liking feature
 
-In Short: We may share information in specific situations described in this section and/or with the following third parties.
+User's Liked Games:
+- The /library route displays a user's library of liked games.
+- login_required ensures only authenticated users can access their library.
+- The user's ID is retrieved from the session (session["user_id"]).
 
-We may need to share your personal information in the following situations:
-Business Transfers. We may share or transfer your information in connection with, or during negotiations of, any merger, sale of company assets, financing, or acquisition of all or a portion of our business to another company.
-Other Users. When you share personal information (for example, by posting comments, contributions, or other content to the Services) or otherwise interact with public areas of the Services, such personal information may be viewed by all users and may be publicly made available outside the Services in perpetuity. Similarly, other users will be able to view descriptions of your activity, communicate with you within our Services, and view your profile.
+Fetching Liked Games:
+- A database query retrieves game IDs from the likes table where the userid matches the logged-in user:
+- SELECT gameid FROM likes WHERE userid = ?
+- If liked games exist:
+  - A list of game IDs is extracted (game_ids).
+  - For each game ID, an API request is made to the FreeToGame API to fetch detailed game information.
+  - Successful responses populate the liked_games list with individual game data.
+- Error handling provides user feedback if game details cannot be retrieved for a specific ID.
 
-### 4. HOW LONG DO WE KEEP YOUR INFORMATION?
+Game Recommendations:
+This section leverages the user's liked games to suggest new games.
 
-In Short: We keep your information for as long as necessary to fulfill the purposes outlined in this Privacy Notice unless otherwise required by law.
+It retrieves tags associated with the user's liked games:
+- SELECT tag FROM liked_game_tags WHERE like_id IN (SELECT id FROM likes WHERE userid = ?)
+- Tag frequency is calculated:
+  - A dictionary tag_counts stores the number of occurrences for each unique tag.
+  - Top 3 most frequent tags are identified using sorting with sorted and tag_counts.get.
+- For each top tag:
+  - An API request retrieves games based on the tag category using the FreeToGame API:
+    - https://www.freetogame.com/api/games?category={tag}
 
-We will only keep your personal information for as long as it is necessary for the purposes set out in this Privacy Notice, unless a longer retention period is required or permitted by law (such as tax, accounting, or other legal requirements). No purpose in this notice will require us keeping your personal information for longer than the period of time in which users have an account with us.
+Recommendation filtering:
+- Excludes games already present in the user's library (using previously retrieved liked_game_ids).
+- Shuffling ensures variety and the top 5 recommendations are selected.
 
-When we have no ongoing legitimate business need to process your personal information, we will either delete or anonymize such information, or, if this is not possible (for example, because your personal information has been stored in backup archives), then we will securely store your personal information and isolate it from any further processing until deletion is possible.
+- Rendering Library:
+- The library.html template is rendered, displaying:
+  - liked_games: List of the user's liked games with detailed information.
+  - recommended_games: Top 5 recommended games based on user preferences.
 
-### 5. HOW DO WE KEEP YOUR INFORMATION SAFE?
+Liking a Game:
+- The /like route (POST request) handles the action of liking a game.
+- The user's ID and game ID are retrieved from the form data.
+- Validation ensures a game ID is provided.
 
-In Short: We aim to protect your personal information through a system of organizational and technical security measures.
+The code checks for duplicate likes before insertion:
+- It queries the likes table to see if the user has already liked the specific game.
+- If a duplicate is found, an error message is displayed, and a redirect occurs.
+- If the game is not already liked:
+  - A new entry is inserted into the likes table with the user ID and game ID.
+  - The ID of the newly inserted like record is retrieved for further operations.
+  - Game details (including tags) are fetched from the FreeToGame API:
+- Tags are extracted from the game data (adapt as needed based on the API response format).
+- Each tag is inserted into the liked_game_tags table, associating it with the like record's ID.
+- Error handling provides user feedback in case of issues during game detail retrieval or tag insertion.
 
-We have implemented appropriate and reasonable technical and organizational security measures designed to protect the security of any personal information we process. However, despite our safeguards and efforts to secure your information, no electronic transmission over the Internet or information storage technology can be guaranteed to be 100% secure, so we cannot promise or guarantee that hackers, cybercriminals, or other unauthorized third parties will not be able to defeat our security and improperly collect, access, steal, or modify your information. Although we will do our best to protect your personal information, transmission of personal information to and from our Services is at your own risk. You should only access the Services within a secure environment.
 
-### 6. DO WE COLLECT INFORMATION FROM MINORS?
+## Beyond the features detailed above, the application also includes several other important functionalities that contribute to a complete and user-friendly experience:
 
-In Short: We do not knowingly collect data from or market to children under 18 years of age.
+### Change Password: 
+  - Users can update their passwords through a secure process, ensuring they maintain control over their account security. This feature typically involves verifying the user's current password before allowing them to set a new one.
 
-We do not knowingly collect, solicit data from, or market to children under 18 years of age, nor do we knowingly sell such personal information. By using the Services, you represent that you are at least 18 or that you are the parent or guardian of such a minor and consent to such minor dependent’s use of the Services. If we learn that personal information from users less than 18 years of age has been collected, we will deactivate the account and take reasonable measures to promptly delete such data from our records. If you become aware of any data we may have collected from children under age 18, please contact us at support@weddingstage.lk.
+### Delete Account: 
+  - Users have the option to permanently delete their accounts and associated data. This feature respects user privacy and provides control over their information.
 
-### 7. WHAT ARE YOUR PRIVACY RIGHTS?
+### Unlike a Game: 
+  - Users can remove games from their library by "unliking" them. This allows users to manage their collections and refine their preferences.
 
-In Short:  You may review, change, or terminate your account at any time, depending on your country, province, or state of residence.
+### Logout: 
+  - A secure logout function allows users to end their sessions and protect their accounts, especially when using public or shared computers. This clears the user's session data on the server.
 
-Withdrawing your consent: If we are relying on your consent to process your personal information, which may be express and/or implied consent depending on the applicable law, you have the right to withdraw your consent at any time. You can withdraw your consent at any time by contacting us by using the contact details provided in the section "HOW CAN YOU CONTACT US ABOUT THIS NOTICE?" below.
+These additional features enhance the overall user experience by providing necessary account management options and further personalization.
 
-However, please note that this will not affect the lawfulness of the processing before its withdrawal nor, when applicable law allows, will it affect the processing of your personal information conducted in reliance on lawful processing grounds other than consent.
+#### Thank you for taking the time to read this documentation. We hope it has provided a clear understanding of the application's functionality and design.
 
-Account Information
 
-If you would at any time like to review or change the information in your account or terminate your account, you can:
-Log in to your account settings and update your user account.
-Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, we may retain some information in our files to prevent fraud, troubleshoot problems, assist with any investigations, enforce our legal terms and/or comply with applicable legal requirements.
 
-If you have questions or comments about your privacy rights, you may email us at productmanager@weddingstage.lk.
 
-### 8. CONTROLS FOR DO-NOT-TRACK FEATURES
 
-Most web browsers and some mobile operating systems and mobile applications include a Do-Not-Track ("DNT") feature or setting you can activate to signal your privacy preference not to have data about your online browsing activities monitored and collected. At this stage, no uniform technology standard for recognizing and implementing DNT signals has been finalized. As such, we do not currently respond to DNT browser signals or any other mechanism that automatically communicates your choice not to be tracked online. If a standard for online tracking is adopted that we must follow in the future, we will inform you about that practice in a revised version of this Privacy Notice.
-
-### 9. DO WE MAKE UPDATES TO THIS NOTICE?
-
-In Short: Yes, we will update this notice as necessary to stay compliant with relevant laws.
-
-We may update this Privacy Notice from time to time. The updated version will be indicated by an updated "Revised" date at the top of this Privacy Notice. If we make material changes to this Privacy Notice, we may notify you either by prominently posting a notice of such changes or by directly sending you a notification. We encourage you to review this Privacy Notice frequently to be informed of how we are protecting your information.
-
-### 10. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?
-
-If you have questions or comments about this notice, you may email us at support@weddingstage.lk or contact us by post at:
-
-Wedding Stage
-Linrose watta, Panwila, Kalutara South
-Kalutara, Western province 12000
-Sri Lanka
-
-### 11. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?
-
-You have the right to request access to the personal information we collect from you, details about how we have processed it, correct inaccuracies, or delete your personal information. You may also have the right to withdraw your consent to our processing of your personal information. These rights may be limited in some circumstances by applicable law. To request to review, update, or delete your personal information, please visit tothe apps profile screen.
-
-#### 10. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?
-
-If you have questions or comments about this notice, <br/> You may email us at productmanager@weddingstage.lk or contact us by post at:<br/>
-
-Wedding Stage <br/>
-No 13/24 Round gardens, <br/>
-Colombo 3, <br/>
-Western province,<br/>
-Sri Lanka.<br/>
